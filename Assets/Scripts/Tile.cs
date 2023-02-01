@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-
+using System.Collections;
 using UnityEngine.UI;
 public class Tile : MonoBehaviour {
     public TileState state { get; private set; }
@@ -36,6 +36,18 @@ public class Tile : MonoBehaviour {
         }
         this.cell = cell;
         this.cell.tile = this;
-        transform.position = cell.transform.position;
+        StartCoroutine(Animate(cell.transform.position));
+    }
+    private IEnumerator Animate(Vector3 to) {
+        float elapsed = 0f;
+        float duration = 0.1f;
+        Vector3 from = transform.position;
+        while (elapsed < duration) {
+            var percentageOfAnimationComplete = elapsed / duration;
+            transform.position = Vector3.Lerp(from, to, percentageOfAnimationComplete);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = to;
     }
 }
